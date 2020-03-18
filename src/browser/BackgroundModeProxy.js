@@ -46,4 +46,11 @@ exports.disable = function (success, error) {
     success();
 };
 
+/**
+ * Play priceAlert sound
+ */
+exports.priceAlertPlayAudio = function (success, error) {
+	success();
+};
+
 cordova.commandProxy.add('BackgroundMode', exports);
