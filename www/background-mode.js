@@ -23,6 +23,18 @@ var exec    = require('cordova/exec'),
     channel = require('cordova/channel');
 
 /**
+ * priceAlertPlayAudio() Only ios
+ *
+ * @return [ Void ]
+ */
+exports.priceAlertPlayAudio = function (volume, duration) {
+	if (!this.isEnabled()) { // only for background mode
+		return;
+	}
+	cordova.exec(null, null, 'BackgroundMode', 'priceAlertPlayAudio', [volume, duration]);
+};
+
+/**
  * Activates the background mode. When activated the application
  * will be prevented from going to sleep while in background
  * for the next time.

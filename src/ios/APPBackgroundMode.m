@@ -18,7 +18,8 @@
   specific language governing permissions and limitations
   under the License.
 */
-
+@import AVFoundation;
+@import CoreMedia.CMTime;
 #import "APPMethodMagic.h"
 #import "APPBackgroundMode.h"
 #import <Cordova/CDVAvailability.h>
@@ -84,6 +85,40 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
 #pragma mark Interface
 
 /**
+ * Play priceAlert sound
+ */
+- (void) priceAlertPlayAudio:(CDVInvokedUrlCommand*)command
+{
+    if (!enabled) {
+    	return;
+    }
+
+
+
+// 	double volume = [[command argumentAtIndex:0] doubleValue]; // 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1
+//  double duration = [[command argumentAtIndex:1] doubleValue];
+
+	double volume = [[command argumentAtIndex:0 withDefault:@(0.5)] doubleValue]; // 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1
+	double duration = [[command argumentAtIndex:1 withDefault:@(1000)] doubleValue];
+	double durationInSeconds = duration / 1000;
+
+// 	 NSLog(@"priceAlertPlay volume %f", &volume);
+// 	 NSLog(@"priceAlertPlay duration %f", &duration);
+// 	 NSLog(@"priceAlertPlay durationInSeconds %f", &durationInSeconds);
+
+	// self.audioPlayer.volume = 0.5;
+	 self.audioPlayer.volume = volume;
+
+	 APPBackgroundMode __weak *weakSelf = self;
+
+	 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(durationInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+		weakSelf.audioPlayer.volume = 0;
+	 });
+
+}
+
+
+/**
  * Enable the mode to stay awake
  * when switching to background for the next time.
  */
@@ -121,7 +156,7 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
     if (!enabled)
         return;
 
-    [audioPlayer play];
+    [self.audioPlayer play];
     [self fireEvent:kAPPBackgroundEventActivate];
 }
 
@@ -134,11 +169,11 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
         NSLog(@"BackgroundMode: On simulator apps never pause in background!");
     }
 
-    if (audioPlayer.isPlaying) {
+    if (self.audioPlayer.isPlaying) {
         [self fireEvent:kAPPBackgroundEventDeactivate];
     }
 
-    [audioPlayer pause];
+    [self.audioPlayer pause];
 }
 
 /**
@@ -152,11 +187,11 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
     NSURL* url = [NSURL fileURLWithPath:path];
 
 
-    audioPlayer = [[AVAudioPlayer alloc]
+    self.audioPlayer = [[AVAudioPlayer alloc]
                    initWithContentsOfURL:url error:NULL];
 
-    audioPlayer.volume        = 0;
-    audioPlayer.numberOfLoops = -1;
+    self.audioPlayer.volume        = 0;
+    self.audioPlayer.numberOfLoops = -1;
 };
 
 /**

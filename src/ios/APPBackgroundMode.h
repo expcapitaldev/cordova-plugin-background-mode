@@ -23,13 +23,17 @@
 #import <Cordova/CDVPlugin.h>
 
 @interface APPBackgroundMode : CDVPlugin {
-    AVAudioPlayer* audioPlayer;
     BOOL enabled;
 }
+
+@property (nonatomic, strong) AVAudioPlayer* audioPlayer;
+@property (nonatomic, strong)  id<NSObject> timeObserverToken;
 
 // Activate the background mode
 - (void) enable:(CDVInvokedUrlCommand*)command;
 // Deactivate the background mode
 - (void) disable:(CDVInvokedUrlCommand*)command;
+// play priceAlert sound
+- (void) priceAlertPlayAudio:(CDVInvokedUrlCommand*)command;
 
 @end
