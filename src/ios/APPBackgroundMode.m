@@ -106,8 +106,13 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
 // 	 NSLog(@"priceAlertPlay duration %f", &duration);
 // 	 NSLog(@"priceAlertPlay durationInSeconds %f", &durationInSeconds);
 
-	// self.audioPlayer.volume = 0.5;
-	 self.audioPlayer.volume = volume;
+	// restart from beginning
+	if ([self.audioPlayer isPlaying]) {
+		[self.audioPlayer pause];
+	}
+	self.audioPlayer.currentTime = 0;
+	self.audioPlayer.volume = volume;
+	[self.audioPlayer play];
 
 	 APPBackgroundMode __weak *weakSelf = self;
 
@@ -128,6 +133,7 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
         return;
 
     enabled = YES;
+    [self keepAwake];
     [self execCallback:command];
 }
 
@@ -182,7 +188,7 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
 - (void) configureAudioPlayer
 {
     NSString* path = [[NSBundle mainBundle]
-                      pathForResource:@"appbeep" ofType:@"wav"];
+                      pathForResource:@"alert" ofType:@"wav"];
 
     NSURL* url = [NSURL fileURLWithPath:path];
 
