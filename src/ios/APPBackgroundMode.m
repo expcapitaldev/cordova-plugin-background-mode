@@ -117,7 +117,7 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
 	 APPBackgroundMode __weak *weakSelf = self;
 
 	 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(durationInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-		weakSelf.audioPlayer.volume = 0;
+		weakSelf.audioPlayer.volume = 0.5;
 	 });
 
 }
@@ -196,7 +196,7 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
     self.audioPlayer = [[AVAudioPlayer alloc]
                    initWithContentsOfURL:url error:NULL];
 
-    self.audioPlayer.volume        = 0;
+    self.audioPlayer.volume        = 0.5;
     self.audioPlayer.numberOfLoops = -1;
 };
 
